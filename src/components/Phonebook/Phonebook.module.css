@@ -1,0 +1,12 @@
+.formContact {
+  max-width: 400px;
+  padding: 30px;
+  border: solid 1px rgb(33, 32, 32);
+}
+.contacts {
+  padding: 30px;
+}
+.title {
+  font-size: 26px;
+  margin-bottom: 25px;
+}

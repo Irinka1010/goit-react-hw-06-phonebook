@@ -1,0 +1,18 @@
+.button {
+  display: block;
+  padding: 5px 10px;
+  border: 1px solid rgb(54, 137, 88);
+  background-color: rgb(23, 194, 131);
+  border-radius: 4px;
+  color: black;
+}
+.button:hover,
+.button:focus {
+  background-color: rgb(172, 78, 31);
+  border-color: rgb(172, 78, 31);
+  color: azure;
+}
+input:focus {
+  border: 2px;
+  border-color: blue;
+}
