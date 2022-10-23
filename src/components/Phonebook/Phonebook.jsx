@@ -1,46 +1,35 @@
-import { nanoid } from 'nanoid';
 import ContactForm from 'components/ContactForm/ContactForm';
 import ContactsList from 'components/ContactsList/ContactsList';
 import Filter from 'components/Filter/Filter';
 import css from 'components/Phonebook/Phonebook.module.css';
-import { useState, useEffect } from 'react';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { getPhonebook, getFilter } from 'redux/selectors';
+import { addContacts, removeContacts } from 'redux/contactsSlice';
+import { setFilter } from 'redux/filterSlice';
 export default function Phonebook() {
-  const [filter, setFilter] = useState('');
-  const [contacts, setContacts] = useState(() => {
-    const velue = JSON.parse(localStorage.getItem('contacts'));
-    return velue ?? [];
-  });
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  const contacts = useSelector(getPhonebook);
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
 
   const hendelChenge = ev => {
     const { value } = ev.target;
-    setFilter(value);
+    dispatch(setFilter(value));
   };
   const isDuplicate = ({ name }) => {
     const result = contacts.find(item => item.name === name);
     return result;
   };
 
-  const addContacts = contact => {
+  const onAddContacts = contact => {
     if (isDuplicate(contact)) {
       return alert(`${contact.name} is already in contacts`);
     }
-    setContacts(prev => {
-      const newContact = {
-        id: nanoid(),
-        ...contact,
-      };
-      return [...prev, newContact];
-    });
+    const action = addContacts(contact);
+    dispatch(action);
   };
-  const removeContacts = id => {
-    setContacts(prev => {
-      const newContacts = prev.filter(contact => contact.id !== id);
-      return newContacts;
-    });
+  const onRemoveContacts = id => {
+    const action = removeContacts(id);
+    dispatch(action);
   };
 
   const getFilteredContacts = () => {
@@ -62,12 +51,15 @@ export default function Phonebook() {
     <>
       <div className={css.formContact}>
         <h2 className={css.title}>Phonebook</h2>
-        <ContactForm onSubmit={addContacts} />
+        <ContactForm onSubmit={onAddContacts} />
       </div>
       <div className={css.contacts}>
         <h2 className={css.title}>Contacts</h2>
         <Filter onChange={hendelChenge} value={filter} />
-        <ContactsList items={filterContacts} removeContacts={removeContacts} />
+        <ContactsList
+          items={filterContacts}
+          removeContacts={onRemoveContacts}
+        />
       </div>
     </>
   );
